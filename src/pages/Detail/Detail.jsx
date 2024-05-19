@@ -8,7 +8,13 @@ const Detail = ({ route }) => {
     const { idMeal } = route.params;
 
     const { error, loading, data } = useFetch(`/lookup.php?i=${idMeal}`);
+
     const mealDetail = data?.meals?.[0];
+
+    const onOpenYoutube = () => {
+        Linking.openURL(mealDetail?.strYoutube);
+    }
+
     return (
         <ScrollView style={styles.container}>
             <Image style={styles.image} source={{ uri: mealDetail?.strMealThumb }} />
@@ -18,16 +24,15 @@ const Detail = ({ route }) => {
             </View>
             <Text>{mealDetail?.strInstructions}</Text>
 
-            <TouchableOpacity
-            onPress={
-                () => {
-                    Linking.openURL(mealDetail?.strYoutube);
-                }
+            {
+                mealDetail?.strYoutube && <TouchableOpacity
+                    onPress={onOpenYoutube}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Watch On Youtube</Text>
+                </TouchableOpacity>
             }
-            style={styles.button}
-            >
-            <Text style={styles.buttonText}>Watch On Youtube</Text>
-            </TouchableOpacity>
+
         </ScrollView>
     );
 };
